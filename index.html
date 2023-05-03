@@ -96,24 +96,30 @@
             }
 
             function calculerDeficit() {
-                const poids = parseFloat(document.getElementById("poids").value);
-                const natremieMesuree = parseFloat(document.getElementById("natremie").value);
-                const calcul = document.getElementById("calcul").value;
-                let natremieCorrigee;
+    const poids = parseFloat(document.getElementById("poids").value);
+    const natremieMesuree = parseFloat(document.getElementById("natremie").value);
+    const calcul = document.getElementById("calcul").value;
+    let natremieCorrigee;
 
-                if (calcul === "glycemie") {
-                    const glycemie = parseFloat(document.getElementById("glycemie").value);
-                    natremieCorrigee = natremieMesuree + (glycemie - 5) / 3;
-                } else {
-                    const proteines = parseFloat(document.getElementById("proteines").value);
-                    natremieCorrigee = natremieMesuree + 0.025 * proteines;
-                }
+    if (calcul === "glycemie") {
+        const glycemie = parseFloat(document.getElementById("glycemie").value);
+        natremieCorrigee = natremieMesuree + (glycemie - 5) / 3;
+    } else {
+        const proteines = parseFloat(document.getElementById("proteines").value);
+        if (proteines >= 80) {
+            natremieCorrigee = natremieMesuree + 0.025 * proteines;
+        } else {
+            alert("Veuillez entrer une valeur de protides totaux supérieure ou égale à 80 g/L.");
+            return;
+        }
+    }
 
-                const deficitEau = 0.6 * poids * (natremieCorrigee - 140) / 140;
+    const deficitEau = 0.6 * poids * (natremieCorrigee - 140) / 140;
 
-                document.getElementById("resultat").textContent = `Le déficit en eau est de ${deficitEau.toFixed(2)} L.`;
-                document.getElementById("natremieCorrigee").textContent = `Natrémie corrigée : ${natremieCorrigee.toFixed(2)} mmol/L.`;
-            }
+    document.getElementById("resultat").textContent = `Le déficit en eau est de ${deficitEau.toFixed(2)} L.`;
+    document.getElementById("natremieCorrigee").textContent = `Natrémie corrigée : ${natremieCorrigee.toFixed(2)} mmol/L.`;
+}
+
         </script>
     </div>
 </body>
