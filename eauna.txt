@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de natrémie corrigée et de déficit en eau</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FAEBD7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #2E8B57;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            height: 50px; 
+        }
+        button:hover {
+            background-color: #3CB371;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculateur de natrémie corrigée et de déficit en eau</h1>
+        <div class="form-section">
+            <label for="poids">Poids (en kg) :</label>
+            <input type="number" id="poids">
+        </div>
+        <div class="form-section">
+            <label for="natremie">Natrémie mesurée (en mmol/L) :</label>
+            <input type="number" id="natremie">
+        </div>
+        <div class="form-section">
+            <label for="calcul">Calcul de la natrémie corrigée à partir de :</label>
+            <select id="calcul" onchange="updateInputs()">
+                <option value="glycemie">Glycémie (en mmol/L)</option>
+                <option value="proteines">Protides totaux (en g/L)</option>
+            </select>
+        </div>
+        <div class="form-section" id="glycemie-input">
+            <label for="glycemie">Glycémie (en mmol/L) :</label>
+            <input type="number" id="glycemie">
+        </div>
+        <div class="form-section" id="proteines-input" style="display: none;">
+            <label for="proteines">Protides totaux (en g/L) :</label>
+            <input type="number" id="proteines">
+        </div>
+        <button onclick="calculerDeficit()">Calculer</button>
+        <h2>Résultat :</h2>
+        <p id="resultat">-</p>
+        <p id="natremieCorrigee">Natrémie corrigée : -</p>
+        <p><strong>Formules utilisées :</strong></p>
+                <p>Natrémie corrigée = Natrémie mesurée + (Glycémie - 5) / 3</p>
+        <p>Natrémie corrigée = Natrémie mesurée + 0.025 * Protides totaux</p>
+        <p>Déficit en eau = 0.6 * Poids (en kg) * (Natrémie corrigée - 140) / 140</p>
+
+        <script>
+            function updateInputs() {
+                const calcul = document.getElementById("calcul").value;
+                if (calcul === "glycemie") {
+                    document.getElementById("glycemie-input").style.display = "block";
+                    document.getElementById("proteines-input").style.display = "none";
+                } else {
+                    document.getElementById("glycemie-input").style.display = "none";
+                    document.getElementById("proteines-input").style.display = "block";
+                }
+            }
+
+            function calculerDeficit() {
+                const poids = parseFloat(document.getElementById("poids").value);
+                const natremieMesuree = parseFloat(document.getElementById("natremie").value);
+                const calcul = document.getElementById("calcul").value;
+                let natremieCorrigee;
+
+                if (calcul === "glycemie") {
+                    const glycemie = parseFloat(document.getElementById("glycemie").value);
+                    natremieCorrigee = natremieMesuree + (glycemie - 5) / 3;
+                } else {
+                    const proteines = parseFloat(document.getElementById("proteines").value);
+                    natremieCorrigee = natremieMesuree + 0.025 * proteines;
+                }
+
+                const deficitEau = 0.6 * poids * (natremieCorrigee - 140) / 140;
+
+                document.getElementById("resultat").textContent = `Le déficit en eau est de ${deficitEau.toFixed(2)} L.`;
+                document.getElementById("natremieCorrigee").textContent = `Natrémie corrigée : ${natremieCorrigee.toFixed(2)} mmol/L.`;
+            }
+        </script>
+    </div>
+</body>
+</html>
+
+       
